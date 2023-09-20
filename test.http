@@ -15,7 +15,7 @@ GET http://localhost:5000/api/product?page=1&limit=3&search=
 PUT http://localhost:5000/api/product/41ea634a-30e5-4700-8ece-3030af4a72c7
 
 {
-	"product_name":"",
+	"product_name":"Komputer",
 	"purchase_price":0,
 	"selling_price":5000000,
 	"stock":0

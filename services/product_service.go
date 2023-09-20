@@ -13,6 +13,7 @@ type ProductService interface {
 	CreateProductService(req web.CreateProductWebRequest) (web.CreateProductWebRequest, error)
 	FindProductService(search string, page int, limit int) (result []web.FindProductWebResponse, totalPage int64, err error)
 	UpdateProductService(id string, req web.UpdateProductWebRequest) (web.UpdateProductWebRequest, error)
+	DeleteProductService(id string) error
 }
 
 type ProductServiceImpl struct {
@@ -81,4 +82,15 @@ func (p *ProductServiceImpl) UpdateProductService(id string, req web.UpdateProdu
 	})
 
 	return req, err
+}
+
+func (p *ProductServiceImpl) DeleteProductService(id string) error {
+	var model domain.Product
+	err := p.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Model(model).WithContext(p.ctx).Where("id = ?", id).Delete(&model).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+	return err
 }

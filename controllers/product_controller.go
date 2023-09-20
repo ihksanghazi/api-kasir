@@ -98,8 +98,14 @@ func (p *ProductControllerImpl) UpdateProductController(c *gin.Context) {
 
 	result, err := p.service.UpdateProductService(id, req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
+		switch err.Error() {
+		case "ERROR: duplicate key value violates unique constraint \"products_product_name_key\" (SQLSTATE 23505)":
+			c.JSON(http.StatusConflict, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
 	}
 
 	response := web.Response{
@@ -114,5 +120,14 @@ func (p *ProductControllerImpl) UpdateProductController(c *gin.Context) {
 func (p *ProductControllerImpl) DeleteProductController(c *gin.Context) {
 	id := c.Param("id")
 
-	c.JSON(200, gin.H{"message": id})
+	if err := p.service.DeleteProductService(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"code":    200,
+		"status":  "OK",
+		"message": "Success Delete Product With Id '" + id + "'",
+	})
 }
