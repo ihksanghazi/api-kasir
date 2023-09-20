@@ -11,6 +11,7 @@ import (
 
 type ProductService interface {
 	CreateProductService(req web.CreateProductWebRequest) (web.CreateProductWebRequest, error)
+	FindProductController(search string, page int, limit int) (result []web.FindProductWebResponse, totalPage int64, err error)
 }
 
 type ProductServiceImpl struct {
@@ -47,4 +48,18 @@ func (p *ProductServiceImpl) CreateProductService(req web.CreateProductWebReques
 	})
 
 	return req, err
+}
+
+func (p *ProductServiceImpl) FindProductController(search string, page int, limit int) (result []web.FindProductWebResponse, totalPage int64, err error) {
+	var model domain.Product
+	var response []web.FindProductWebResponse
+	//pagination
+	var total int64
+	offset := (page - 1) * limit
+	// getall user by page
+	Err := p.db.Model(model).WithContext(p.ctx).Where("product_name ILIKE ?", "%"+search+"%").Count(&total).Offset(offset).Limit(limit).Find(&response).Error
+
+	TotalPage := (total + int64(limit) - 1) / int64(limit)
+
+	return response, TotalPage, Err
 }

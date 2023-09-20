@@ -9,4 +9,4 @@ POST http://localhost:5000/api/product
 }
 
 ### Find Product
-GET http://localhost:5000/api/product?page=2&limit=10&search=cari
+GET http://localhost:5000/api/product?page=1&limit=3&search=p
