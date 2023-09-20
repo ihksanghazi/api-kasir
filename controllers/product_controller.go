@@ -11,6 +11,7 @@ import (
 
 type ProductController interface {
 	CreateProductController(c *gin.Context)
+	FindProductController(c *gin.Context)
 }
 
 type ProductControllerImpl struct {
@@ -49,4 +50,16 @@ func (p *ProductControllerImpl) CreateProductController(c *gin.Context) {
 	}
 
 	c.JSON(200, response)
+}
+
+func (p *ProductControllerImpl) FindProductController(c *gin.Context) {
+	page := c.DefaultQuery("page", "1")
+	limit := c.DefaultQuery("limit", "5")
+	search := c.DefaultQuery("search", "")
+
+	c.JSON(200, gin.H{
+		"page":   page,
+		"limit":  limit,
+		"search": search,
+	})
 }

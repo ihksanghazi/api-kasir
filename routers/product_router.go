@@ -14,4 +14,5 @@ func ProductRoute(r *gin.RouterGroup) {
 	service := services.NewProductService(database.DB, ctx)
 	controller := controllers.NewProductController(service)
 	r.POST("/", controller.CreateProductController)
+	r.GET("/", controller.FindProductController)
 }

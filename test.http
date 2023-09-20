@@ -7,3 +7,6 @@ POST http://localhost:5000/api/product
 	"selling_price":1000000,
 	"stock":40
 }
+
+### Find Product
+GET http://localhost:5000/api/product?page=2&limit=10&search=cari
