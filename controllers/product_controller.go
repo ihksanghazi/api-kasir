@@ -14,6 +14,7 @@ import (
 type ProductController interface {
 	CreateProductController(c *gin.Context)
 	FindProductController(c *gin.Context)
+	UpdateProductController(c *gin.Context)
 }
 
 type ProductControllerImpl struct {
@@ -51,7 +52,7 @@ func (p *ProductControllerImpl) CreateProductController(c *gin.Context) {
 		Data:   result,
 	}
 
-	c.JSON(200, response)
+	c.JSON(http.StatusCreated, response)
 }
 
 func (p *ProductControllerImpl) FindProductController(c *gin.Context) {
@@ -62,7 +63,7 @@ func (p *ProductControllerImpl) FindProductController(c *gin.Context) {
 	Page, _ := strconv.Atoi(page)
 	Limit, _ := strconv.Atoi(limit)
 
-	result, totalPage, err := p.service.FindProductController(search, Page, Limit)
+	result, totalPage, err := p.service.FindProductService(search, Page, Limit)
 	if err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
@@ -83,4 +84,28 @@ func (p *ProductControllerImpl) FindProductController(c *gin.Context) {
 	}
 
 	c.JSON(200, pagination)
+}
+
+func (p *ProductControllerImpl) UpdateProductController(c *gin.Context) {
+	id := c.Param("id")
+
+	var req web.UpdateProductWebRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	result, err := p.service.UpdateProductService(id, req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	response := web.Response{
+		Code:   200,
+		Status: "OK",
+		Data:   result,
+	}
+
+	c.JSON(200, response)
 }
