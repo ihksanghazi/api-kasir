@@ -9,10 +9,10 @@ import (
 
 type Product struct {
 	ID            uuid.UUID `gorm:"primarykey;type:uuid;default:uuid_generate_v4()"`
-	ProductName   string
-	PurchasePrice float64
-	SellingPrice  float64
-	Stock         int
+	ProductName   string    `gorm:"index;not null;unique"`
+	PurchasePrice float64   `gorm:"not null"`
+	SellingPrice  float64   `gorm:"not null"`
+	Stock         int       `gorm:"not null"`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 	DeletedAt     gorm.DeletedAt `gorm:"index"`

@@ -1,10 +1,25 @@
-### Test
-GET http://localhost:5000/api/test
-
-### Test BIND
-POST http://localhost:5000/api/user
+### Create Product
+POST http://localhost:5000/api/product
 
 {
-  "user":"Sandy",
-  "password":"123"
+  "product_name":"Monitor",
+	"purchase_price":2000000,
+	"selling_price":2500000,
+	"stock":60
 }
+
+### Find Product
+GET http://localhost:5000/api/product?page=1&limit=3&search=
+
+### Update Product
+PUT http://localhost:5000/api/product/6e003967-aece-444a-9caa-6397981293a4
+
+{
+	"product_name":"Komputer",
+	"purchase_price":0,
+	"selling_price":5000000,
+	"stock":0
+}
+
+### Delete Product
+DELETE http://localhost:5000/api/product/41ea634a-30e5-4700-8ece-3030af4a72c7
