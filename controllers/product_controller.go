@@ -15,6 +15,7 @@ type ProductController interface {
 	CreateProductController(c *gin.Context)
 	FindProductController(c *gin.Context)
 	UpdateProductController(c *gin.Context)
+	DeleteProductController(c *gin.Context)
 }
 
 type ProductControllerImpl struct {
@@ -108,4 +109,10 @@ func (p *ProductControllerImpl) UpdateProductController(c *gin.Context) {
 	}
 
 	c.JSON(200, response)
+}
+
+func (p *ProductControllerImpl) DeleteProductController(c *gin.Context) {
+	id := c.Param("id")
+
+	c.JSON(200, gin.H{"message": id})
 }
