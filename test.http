@@ -1,0 +1,10 @@
+### Test
+GET http://localhost:5000/api/test
+
+### Test BIND
+POST http://localhost:5000/api/user
+
+{
+  "user":"Sandy",
+  "password":"123"
+}
