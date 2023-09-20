@@ -10,3 +10,6 @@ POST http://localhost:5000/api/product
 
 ### Find Product
 GET http://localhost:5000/api/product?page=1&limit=3&search=p
+
+### Update Product
+PUT http://localhost:5000/api/product/coba

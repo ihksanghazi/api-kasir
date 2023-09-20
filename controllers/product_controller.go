@@ -14,6 +14,7 @@ import (
 type ProductController interface {
 	CreateProductController(c *gin.Context)
 	FindProductController(c *gin.Context)
+	UpdateProductController(c *gin.Context)
 }
 
 type ProductControllerImpl struct {
@@ -51,7 +52,7 @@ func (p *ProductControllerImpl) CreateProductController(c *gin.Context) {
 		Data:   result,
 	}
 
-	c.JSON(200, response)
+	c.JSON(http.StatusCreated, response)
 }
 
 func (p *ProductControllerImpl) FindProductController(c *gin.Context) {
@@ -83,4 +84,10 @@ func (p *ProductControllerImpl) FindProductController(c *gin.Context) {
 	}
 
 	c.JSON(200, pagination)
+}
+
+func (p *ProductControllerImpl) UpdateProductController(c *gin.Context) {
+	id := c.Param("id")
+
+	c.JSON(200, gin.H{"message": id})
 }
