@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ihksanghazi/api-kasir/models/web"
+	"github.com/ihksanghazi/api-kasir/services"
 	"github.com/ihksanghazi/api-kasir/utils"
 )
 
@@ -13,10 +14,13 @@ type ProductController interface {
 }
 
 type ProductControllerImpl struct {
+	service services.ProductService
 }
 
-func NewProductController() ProductController {
-	return &ProductControllerImpl{}
+func NewProductController(service services.ProductService) ProductController {
+	return &ProductControllerImpl{
+		service: service,
+	}
 }
 
 func (p *ProductControllerImpl) CreateProductController(c *gin.Context) {
@@ -26,10 +30,22 @@ func (p *ProductControllerImpl) CreateProductController(c *gin.Context) {
 		return
 	}
 
+	result, err := p.service.CreateProductService(req)
+	if err != nil {
+		switch err.Error() {
+		case "product already exists":
+			c.JSON(http.StatusConflict, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+	}
+
 	response := web.Response{
 		Code:   http.StatusOK,
 		Status: "OK",
-		Data:   req,
+		Data:   result,
 	}
 
 	c.JSON(200, response)

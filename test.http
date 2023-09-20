@@ -2,8 +2,8 @@
 POST http://localhost:5000/api/product
 
 {
-  "product_name":"Laptop",
-	"purchase_price":4000000,
-	"selling_price":5000000,
-	"stock":20
+  "product_name":"Kulkas",
+	"purchase_price":700000,
+	"selling_price":1000000,
+	"stock":40
 }
