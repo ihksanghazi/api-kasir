@@ -24,6 +24,7 @@ func main() {
 	// database.DB.AutoMigrate(domain.Product{}, domain.Transaction{}, domain.TransactionDetail{})
 
 	routers.ProductRoute(r.Group("/api/product"))
+	routers.TransactionRouter(r.Group("/api/transaction"))
 
 	r.Run(":5000")
 }
