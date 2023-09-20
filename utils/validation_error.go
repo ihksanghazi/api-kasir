@@ -9,7 +9,7 @@ import (
 func ValidationError(err error) []string {
 	var errors []string
 	for _, fieldErr := range err.(validator.ValidationErrors) {
-		errors = append(errors, fmt.Sprintf("Field validation for '%s' failed on the '%s' tag", fieldErr.Field(), fieldErr.Tag()))
+		errors = append(errors, fmt.Sprintf("%s Must Be %s", fieldErr.Field(), fieldErr.Tag()))
 	}
 
 	return errors

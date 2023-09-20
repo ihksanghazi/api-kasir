@@ -1,10 +1,9 @@
-### Test
-GET http://localhost:5000/api/test
-
-### Test BIND
-POST http://localhost:5000/api/user
+### Create Product
+POST http://localhost:5000/api/product
 
 {
-  "user":"Sandy",
-  "password":"123"
+  "product_name":"Laptop",
+	"purchase_price":4000000,
+	"selling_price":5000000,
+	"stock":20
 }
