@@ -9,7 +9,14 @@ POST http://localhost:5000/api/product
 }
 
 ### Find Product
-GET http://localhost:5000/api/product?page=1&limit=3&search=p
+GET http://localhost:5000/api/product?page=1&limit=3&search=
 
 ### Update Product
-PUT http://localhost:5000/api/product/coba
+PUT http://localhost:5000/api/product/41ea634a-30e5-4700-8ece-3030af4a72c7
+
+{
+	"product_name":"",
+	"purchase_price":0,
+	"selling_price":5000000,
+	"stock":0
+}

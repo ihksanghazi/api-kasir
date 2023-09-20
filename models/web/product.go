@@ -8,6 +8,12 @@ type CreateProductWebRequest struct {
 	SellingPrice  float64 `json:"selling_price" binding:"required"`
 	Stock         int     `json:"stock" binding:"required"`
 }
+type UpdateProductWebRequest struct {
+	ProductName   string  `json:"product_name"`
+	PurchasePrice float64 `json:"purchase_price"`
+	SellingPrice  float64 `json:"selling_price"`
+	Stock         int     `json:"stock"`
+}
 
 type FindProductWebResponse struct {
 	ID            uuid.UUID `json:"id"`

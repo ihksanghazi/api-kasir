@@ -11,7 +11,8 @@ import (
 
 type ProductService interface {
 	CreateProductService(req web.CreateProductWebRequest) (web.CreateProductWebRequest, error)
-	FindProductController(search string, page int, limit int) (result []web.FindProductWebResponse, totalPage int64, err error)
+	FindProductService(search string, page int, limit int) (result []web.FindProductWebResponse, totalPage int64, err error)
+	UpdateProductService(id string, req web.UpdateProductWebRequest) (web.UpdateProductWebRequest, error)
 }
 
 type ProductServiceImpl struct {
@@ -50,7 +51,7 @@ func (p *ProductServiceImpl) CreateProductService(req web.CreateProductWebReques
 	return req, err
 }
 
-func (p *ProductServiceImpl) FindProductController(search string, page int, limit int) (result []web.FindProductWebResponse, totalPage int64, err error) {
+func (p *ProductServiceImpl) FindProductService(search string, page int, limit int) (result []web.FindProductWebResponse, totalPage int64, err error) {
 	var model domain.Product
 	var response []web.FindProductWebResponse
 	//pagination
@@ -62,4 +63,22 @@ func (p *ProductServiceImpl) FindProductController(search string, page int, limi
 	TotalPage := (total + int64(limit) - 1) / int64(limit)
 
 	return response, TotalPage, Err
+}
+
+func (p *ProductServiceImpl) UpdateProductService(id string, req web.UpdateProductWebRequest) (web.UpdateProductWebRequest, error) {
+	// parsing to model
+	var model domain.Product
+	model.ProductName = req.ProductName
+	model.PurchasePrice = req.PurchasePrice
+	model.SellingPrice = req.SellingPrice
+	model.Stock = req.Stock
+
+	err := p.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Model(model).WithContext(p.ctx).Where("id = ?", id).Updates(&model).Find(&req).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+
+	return req, err
 }
