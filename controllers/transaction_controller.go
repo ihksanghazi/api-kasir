@@ -15,6 +15,7 @@ import (
 type TransactionController interface {
 	CreateTransactionController(c *gin.Context)
 	FindTransactionController(c *gin.Context)
+	GetTransactionController(c *gin.Context)
 }
 
 type TransactionControllerImpl struct {
@@ -106,4 +107,10 @@ func (t *TransactionControllerImpl) FindTransactionController(c *gin.Context) {
 	}
 
 	c.JSON(200, response)
+}
+
+func (t *TransactionControllerImpl) GetTransactionController(c *gin.Context) {
+	id := c.Param("id")
+
+	c.JSON(200, gin.H{"message": id})
 }
