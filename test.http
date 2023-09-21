@@ -43,3 +43,6 @@ POST http://localhost:5000/api/transaction
 		}
 	]
 }
+
+### Find Transaction
+GET http://localhost:5000/api/transaction?startDate=2023-09-01&endDate=2023-09-30

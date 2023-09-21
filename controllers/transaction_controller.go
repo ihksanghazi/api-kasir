@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ihksanghazi/api-kasir/models/web"
@@ -12,6 +13,7 @@ import (
 
 type TransactionController interface {
 	CreateTransactionController(c *gin.Context)
+	FindTransactionController(c *gin.Context)
 }
 
 type TransactionControllerImpl struct {
@@ -50,4 +52,26 @@ func (t *TransactionControllerImpl) CreateTransactionController(c *gin.Context) 
 	}
 
 	c.JSON(http.StatusCreated, response)
+}
+
+func (t *TransactionControllerImpl) FindTransactionController(c *gin.Context) {
+	startDateStr := c.DefaultQuery("startDate", time.Now().Format("2006-01-02"))
+	endDateStr := c.DefaultQuery("endDate", time.Now().Add(24*time.Hour).Format("2006-01-02"))
+
+	startDate, err := time.Parse("2006-01-02", startDateStr)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid start date format"})
+		return
+	}
+
+	endDate, err := time.Parse("2006-01-02", endDateStr)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid end date format"})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"start_date": startDate,
+		"end_date":   endDate,
+	})
 }
