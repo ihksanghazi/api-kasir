@@ -50,3 +50,4 @@ GET http://localhost:5000/api/transaction?startDate=2023-09-21&endDate=2023-09-3
 GET http://localhost:5000/api/transaction/81bada9a-4eef-4fa5-b1f9-d5fa825f42a5
 
 ### Report Transaction
+GET http://localhost:5000/api/transaction/report?startDate=2023-09-01&endDate=2023-09-30

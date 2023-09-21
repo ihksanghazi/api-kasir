@@ -16,6 +16,7 @@ type TransactionController interface {
 	CreateTransactionController(c *gin.Context)
 	FindTransactionController(c *gin.Context)
 	GetTransactionController(c *gin.Context)
+	ReportTransactionController(c *gin.Context)
 }
 
 type TransactionControllerImpl struct {
@@ -131,4 +132,26 @@ func (t *TransactionControllerImpl) GetTransactionController(c *gin.Context) {
 	}
 
 	c.JSON(200, response)
+}
+
+func (t *TransactionControllerImpl) ReportTransactionController(c *gin.Context) {
+	startDateStr := c.DefaultQuery("startDate", time.Now().Format("2006-01-02"))
+	endDateStr := c.DefaultQuery("endDate", time.Now().Add(24*time.Hour).Format("2006-01-02"))
+
+	startDate, err := time.Parse("2006-01-02", startDateStr)
+	if err != nil {
+		c.JSON(400, gin.H{"message": "Invalid start date format"})
+		return
+	}
+
+	endDate, err := time.Parse("2006-01-02", endDateStr)
+	if err != nil {
+		c.JSON(400, gin.H{"message": "Invalid end date format"})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"start_date": startDate,
+		"endDate":    endDate,
+	})
 }
