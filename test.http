@@ -23,3 +23,23 @@ PUT http://localhost:5000/api/product/6e003967-aece-444a-9caa-6397981293a4
 
 ### Delete Product
 DELETE http://localhost:5000/api/product/41ea634a-30e5-4700-8ece-3030af4a72c7
+
+### Create Transaction
+POST http://localhost:5000/api/transaction
+
+{
+	"products":[
+		{
+			"product_id":"41ea634a-30e5-4700-8ece-3030af4a72c7",
+			"amount":1
+		},
+		{
+			"product_id":"c88a3e29-6c32-45b1-a3d1-545617776ae5",
+			"amount":1
+		},
+		{
+			"product_id":"6e003967-aece-444a-9caa-6397981293a4",
+			"amount":1
+		}
+	]
+}
