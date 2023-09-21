@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -57,21 +58,52 @@ func (t *TransactionControllerImpl) CreateTransactionController(c *gin.Context) 
 func (t *TransactionControllerImpl) FindTransactionController(c *gin.Context) {
 	startDateStr := c.DefaultQuery("startDate", time.Now().Format("2006-01-02"))
 	endDateStr := c.DefaultQuery("endDate", time.Now().Add(24*time.Hour).Format("2006-01-02"))
+	page := c.DefaultQuery("page", "1")
+	limit := c.DefaultQuery("limit", "5")
 
 	startDate, err := time.Parse("2006-01-02", startDateStr)
 	if err != nil {
-		c.JSON(400, gin.H{"error": "Invalid start date format"})
+		c.JSON(400, gin.H{"message": "Invalid start date format"})
 		return
 	}
 
 	endDate, err := time.Parse("2006-01-02", endDateStr)
 	if err != nil {
-		c.JSON(400, gin.H{"error": "Invalid end date format"})
+		c.JSON(400, gin.H{"message": "Invalid end date format"})
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"start_date": startDate,
-		"end_date":   endDate,
-	})
+	Page, err := strconv.Atoi(page)
+	if err != nil {
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
+
+	Limit, err := strconv.Atoi(limit)
+	if err != nil {
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
+
+	result, totalPage, err := t.service.FindTransactionService(startDate, endDate, Page, Limit)
+	if err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+	}
+
+	response := web.Pagination{
+		Code:        200,
+		Status:      "OK",
+		CurrentPage: Page,
+		TotalPage:   totalPage,
+		Data:        result,
+	}
+
+	c.JSON(200, response)
 }

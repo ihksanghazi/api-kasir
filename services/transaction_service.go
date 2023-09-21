@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/ihksanghazi/api-kasir/models/domain"
 	"github.com/ihksanghazi/api-kasir/models/web"
@@ -11,6 +12,7 @@ import (
 
 type TransactionService interface {
 	CreateTransactionService(req web.CreateTransactionWebRequest) (web.CreateTransactionWebResponse, error)
+	FindTransactionService(startDate time.Time, endDate time.Time, page int, limit int) (result []web.FindTransactionWebResponse, totalPage int64, err error)
 }
 
 type TransactionServiceImpl struct {
@@ -72,4 +74,16 @@ func (t *TransactionServiceImpl) CreateTransactionService(req web.CreateTransact
 	})
 
 	return response, errTransaction
+}
+
+func (t *TransactionServiceImpl) FindTransactionService(startDate time.Time, endDate time.Time, page int, limit int) (result []web.FindTransactionWebResponse, totalPage int64, err error) {
+	var model domain.Transaction
+	var response []web.FindTransactionWebResponse
+
+	var total int64
+	offset := (page - 1) * limit
+	Err := t.db.Model(model).WithContext(t.ctx).Where("created_at BETWEEN ? AND ?", startDate, endDate).Count(&total).Offset(offset).Limit(limit).Find(&response).Error
+
+	TotalPage := (total + int64(limit) - 1) / int64(limit)
+	return response, TotalPage, Err
 }
