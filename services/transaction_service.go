@@ -13,6 +13,7 @@ import (
 type TransactionService interface {
 	CreateTransactionService(req web.CreateTransactionWebRequest) (web.CreateTransactionWebResponse, error)
 	FindTransactionService(startDate time.Time, endDate time.Time, page int, limit int) (result []web.FindTransactionWebResponse, totalPage int64, err error)
+	GetTransactionController(id string) (web.CreateTransactionWebResponse, error)
 }
 
 type TransactionServiceImpl struct {
@@ -86,4 +87,11 @@ func (t *TransactionServiceImpl) FindTransactionService(startDate time.Time, end
 
 	TotalPage := (total + int64(limit) - 1) / int64(limit)
 	return response, TotalPage, Err
+}
+
+func (t *TransactionServiceImpl) GetTransactionController(id string) (web.CreateTransactionWebResponse, error) {
+	var model domain.Transaction
+	var response web.CreateTransactionWebResponse
+	err := t.db.Model(model).WithContext(t.ctx).Where("id = ?", id).Preload("TransactionDetails.Products").First(&response).Error
+	return response, err
 }

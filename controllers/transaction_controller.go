@@ -15,6 +15,7 @@ import (
 type TransactionController interface {
 	CreateTransactionController(c *gin.Context)
 	FindTransactionController(c *gin.Context)
+	GetTransactionController(c *gin.Context)
 }
 
 type TransactionControllerImpl struct {
@@ -103,6 +104,30 @@ func (t *TransactionControllerImpl) FindTransactionController(c *gin.Context) {
 		CurrentPage: Page,
 		TotalPage:   totalPage,
 		Data:        result,
+	}
+
+	c.JSON(200, response)
+}
+
+func (t *TransactionControllerImpl) GetTransactionController(c *gin.Context) {
+	id := c.Param("id")
+
+	result, err := t.service.GetTransactionController(id)
+	if err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+	}
+
+	response := web.Response{
+		Code:   200,
+		Status: "OK",
+		Data:   result,
 	}
 
 	c.JSON(200, response)

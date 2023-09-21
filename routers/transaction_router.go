@@ -18,4 +18,5 @@ func TransactionRouter(r *gin.RouterGroup) {
 
 	r.POST("/", controller.CreateTransactionController)
 	r.GET("/", controller.FindTransactionController)
+	r.GET("/:id", controller.GetTransactionController)
 }
