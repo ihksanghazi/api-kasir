@@ -48,4 +48,4 @@ POST http://localhost:5000/api/transaction
 GET http://localhost:5000/api/transaction?startDate=2023-09-21&endDate=2023-09-30&page=1&limit=10
 
 ### Get Transaction
-GET http://localhost:5000/api/transaction/1212121
+GET http://localhost:5000/api/transaction/e6eb734a-0eb3-497d-857a-bbe61b4f189d
