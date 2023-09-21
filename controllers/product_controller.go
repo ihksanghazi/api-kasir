@@ -14,6 +14,7 @@ import (
 type ProductController interface {
 	CreateProductController(c *gin.Context)
 	FindProductController(c *gin.Context)
+	GetProductController(c *gin.Context)
 	UpdateProductController(c *gin.Context)
 	DeleteProductController(c *gin.Context)
 }
@@ -48,7 +49,7 @@ func (p *ProductControllerImpl) CreateProductController(c *gin.Context) {
 	}
 
 	response := web.Response{
-		Code:   http.StatusOK,
+		Code:   http.StatusCreated,
 		Status: "OK",
 		Data:   result,
 	}
@@ -94,6 +95,30 @@ func (p *ProductControllerImpl) FindProductController(c *gin.Context) {
 	}
 
 	c.JSON(200, pagination)
+}
+
+func (p *ProductControllerImpl) GetProductController(c *gin.Context) {
+	id := c.Param("id")
+
+	result, err := p.service.GetProductService(id)
+	if err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+	}
+
+	response := web.Response{
+		Code:   200,
+		Status: "OK",
+		Data:   result,
+	}
+
+	c.JSON(200, response)
 }
 
 func (p *ProductControllerImpl) UpdateProductController(c *gin.Context) {

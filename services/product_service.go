@@ -12,6 +12,7 @@ import (
 type ProductService interface {
 	CreateProductService(req web.CreateProductWebRequest) (web.CreateProductWebRequest, error)
 	FindProductService(search string, page int, limit int) (result []web.FindProductWebResponse, totalPage int64, err error)
+	GetProductService(id string) (web.GetProductWebResponse, error)
 	UpdateProductService(id string, req web.UpdateProductWebRequest) (web.UpdateProductWebRequest, error)
 	DeleteProductService(id string) error
 }
@@ -64,6 +65,13 @@ func (p *ProductServiceImpl) FindProductService(search string, page int, limit i
 	TotalPage := (total + int64(limit) - 1) / int64(limit)
 
 	return response, TotalPage, Err
+}
+
+func (p *ProductServiceImpl) GetProductService(id string) (web.GetProductWebResponse, error) {
+	var model domain.Product
+	var response web.GetProductWebResponse
+	err := p.db.Model(model).WithContext(p.ctx).Where("id = ?", id).Preload("Transactions").First(&response).Error
+	return response, err
 }
 
 func (p *ProductServiceImpl) UpdateProductService(id string, req web.UpdateProductWebRequest) (web.UpdateProductWebRequest, error) {
