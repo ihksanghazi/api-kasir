@@ -113,7 +113,7 @@ func (t *TransactionControllerImpl) FindTransactionController(c *gin.Context) {
 func (t *TransactionControllerImpl) GetTransactionController(c *gin.Context) {
 	id := c.Param("id")
 
-	result, err := t.service.GetTransactionController(id)
+	result, err := t.service.GetTransactionService(id)
 	if err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
@@ -150,8 +150,23 @@ func (t *TransactionControllerImpl) ReportTransactionController(c *gin.Context) 
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"start_date": startDate,
-		"endDate":    endDate,
-	})
+	result, err := t.service.ReportTransactionService(startDate, endDate)
+	if err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+	}
+
+	response := web.Response{
+		Code:   200,
+		Status: "OK",
+		Data:   result,
+	}
+
+	c.JSON(200, response)
 }

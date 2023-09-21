@@ -13,7 +13,8 @@ import (
 type TransactionService interface {
 	CreateTransactionService(req web.CreateTransactionWebRequest) (web.CreateTransactionWebResponse, error)
 	FindTransactionService(startDate time.Time, endDate time.Time, page int, limit int) (result []web.FindTransactionWebResponse, totalPage int64, err error)
-	GetTransactionController(id string) (web.CreateTransactionWebResponse, error)
+	GetTransactionService(id string) (web.CreateTransactionWebResponse, error)
+	ReportTransactionService(startDate time.Time, endDate time.Time) (web.Report, error)
 }
 
 type TransactionServiceImpl struct {
@@ -89,9 +90,39 @@ func (t *TransactionServiceImpl) FindTransactionService(startDate time.Time, end
 	return response, TotalPage, Err
 }
 
-func (t *TransactionServiceImpl) GetTransactionController(id string) (web.CreateTransactionWebResponse, error) {
+func (t *TransactionServiceImpl) GetTransactionService(id string) (web.CreateTransactionWebResponse, error) {
 	var model domain.Transaction
 	var response web.CreateTransactionWebResponse
 	err := t.db.Model(model).WithContext(t.ctx).Where("id = ?", id).Preload("TransactionDetails.Products").First(&response).Error
 	return response, err
+}
+
+func (t *TransactionServiceImpl) ReportTransactionService(startDate time.Time, endDate time.Time) (web.Report, error) {
+	var totalTransaction, productSold, totalSales, totalProfit float64
+	var Error error
+	// total transaction
+	if err := t.db.Raw("select count(*) from transactions t where t.created_at between ? and ?", startDate, endDate).Scan(&totalTransaction).Error; err != nil {
+		Error = err
+	}
+	// total product sold
+	if err := t.db.Raw("select sum(td.amount) from transaction_details td where td.created_at between ? and ?", startDate, endDate).Scan(&productSold).Error; err != nil {
+		Error = err
+	}
+	// total sales
+	if err := t.db.Raw("select sum(t.total) from transactions t where t.created_at between ? and ?", startDate, endDate).Scan(&totalSales).Error; err != nil {
+		Error = err
+	}
+	// total profit
+	if err := t.db.Raw("select sum((p.selling_price-p.purchase_price)*td.amount) from  transaction_details td join products p on product_id = p.id where td.created_at between ? and ?", startDate, endDate).Scan(&totalProfit).Error; err != nil {
+		Error = err
+	}
+
+	report := web.Report{
+		TotalTransaction: totalTransaction,
+		ProductSold:      productSold,
+		TotalSales:       totalSales,
+		TotalProfit:      totalProfit,
+	}
+
+	return report, Error
 }
