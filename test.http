@@ -11,6 +11,9 @@ POST http://localhost:5000/api/product
 ### Find Product
 GET http://localhost:5000/api/product?page=1&limit=3&search=
 
+### Get Product
+GET http://localhost:5000/api/product/3456
+
 ### Update Product
 PUT http://localhost:5000/api/product/6e003967-aece-444a-9caa-6397981293a4
 

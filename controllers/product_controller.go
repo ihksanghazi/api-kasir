@@ -14,6 +14,7 @@ import (
 type ProductController interface {
 	CreateProductController(c *gin.Context)
 	FindProductController(c *gin.Context)
+	GetProductController(c *gin.Context)
 	UpdateProductController(c *gin.Context)
 	DeleteProductController(c *gin.Context)
 }
@@ -94,6 +95,12 @@ func (p *ProductControllerImpl) FindProductController(c *gin.Context) {
 	}
 
 	c.JSON(200, pagination)
+}
+
+func (p *ProductControllerImpl) GetProductController(c *gin.Context) {
+	id := c.Param("id")
+
+	c.JSON(200, gin.H{"message": id})
 }
 
 func (p *ProductControllerImpl) UpdateProductController(c *gin.Context) {

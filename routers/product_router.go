@@ -15,6 +15,7 @@ func ProductRoute(r *gin.RouterGroup) {
 	controller := controllers.NewProductController(service)
 	r.POST("/", controller.CreateProductController)
 	r.GET("/", controller.FindProductController)
+	r.GET("/:id", controller.GetProductController)
 	r.PUT("/:id", controller.UpdateProductController)
 	r.DELETE("/:id", controller.DeleteProductController)
 }
