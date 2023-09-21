@@ -13,7 +13,9 @@ func TransactionRouter(r *gin.RouterGroup) {
 
 	var ctx context.Context
 	service := services.NewTransactionService(database.DB, ctx)
+
 	controller := controllers.NewTransactionController(service)
 
 	r.POST("/", controller.CreateTransactionController)
+	r.GET("/", controller.FindTransactionController)
 }

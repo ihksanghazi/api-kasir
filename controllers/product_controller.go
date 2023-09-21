@@ -61,8 +61,17 @@ func (p *ProductControllerImpl) FindProductController(c *gin.Context) {
 	limit := c.DefaultQuery("limit", "5")
 	search := c.DefaultQuery("search", "")
 
-	Page, _ := strconv.Atoi(page)
-	Limit, _ := strconv.Atoi(limit)
+	Page, err := strconv.Atoi(page)
+	if err != nil {
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
+
+	Limit, err := strconv.Atoi(limit)
+	if err != nil {
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
 
 	result, totalPage, err := p.service.FindProductService(search, Page, Limit)
 	if err != nil {

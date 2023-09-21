@@ -50,3 +50,10 @@ type CreateTransactionDetailProductWebResponse struct {
 func (c *CreateTransactionDetailProductWebResponse) TableName() string {
 	return "products"
 }
+
+type FindTransactionWebResponse struct {
+	ID        uuid.UUID `json:"id"`
+	Total     float64   `json:"total"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
