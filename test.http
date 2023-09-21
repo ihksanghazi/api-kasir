@@ -30,12 +30,16 @@ POST http://localhost:5000/api/transaction
 {
 	"products":[
 		{
-			"product_id":"e39a6872-8ac6-46d9-b0b1-e62d487d0a8b",
-			"amount":0
+			"product_id":"41ea634a-30e5-4700-8ece-3030af4a72c7",
+			"amount":1
 		},
 		{
-			"product_id":"eab02903-2c21-45dc-ab97-72a1cf28f739",
-			"amount":0
+			"product_id":"c88a3e29-6c32-45b1-a3d1-545617776ae5",
+			"amount":1
+		},
+		{
+			"product_id":"6e003967-aece-444a-9caa-6397981293a4",
+			"amount":1
 		}
 	]
 }
