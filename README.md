@@ -2,6 +2,10 @@
 
 ## Description
 
+"api-kasir" adalah sebuah sistem manajemen toko atau kasir yang berfokus pada pengelolaan produk dan transaksi. Sistem ini menyediakan berbagai fitur yang memungkinkan pengguna untuk melakukan berbagai operasi seperti menambahkan produk baru, mencari produk berdasarkan nama, melihat informasi produk, memperbarui data produk, menghapus produk, serta melakukan transaksi pembelian produk.
+
+Selain itu, proyek ini juga dilengkapi dengan fitur pelaporan yang memungkinkan pengguna untuk melihat laporan transaksi, termasuk jumlah total transaksi, jumlah produk yang terjual, total penjualan, dan total keuntungan dalam rentang waktu tertentu.
+
 ## Feature
 
 ### Create Product
@@ -101,6 +105,56 @@ GET http://localhost:5000/api/product?page=1&limit=3&search=
 
 ##
 
+### Get Product
+
+Digunakan untuk mendapatkan informasi lengkap tentang produk berdasarkan **ID produk**.
+
+#### Endpoint
+
+```http
+GET http://localhost:5000/api/product/<ProductId>
+```
+
+#### Parameter
+
+- **ProductId** (string, required): ID unik produk yang ingin dilihat informasinya.
+
+### Response
+
+- **HTTP Status**: 200 OK
+- **Content-Type**: application/json; charset=utf-8
+
+```json
+{
+  "code": 200,
+  "status": "OK",
+  "data": {
+    "id": "<ProductId>",
+    "product_name": "Laptop",
+    "purchase_price": 3000000,
+    "selling_price": 4000000,
+    "stock": 45,
+    "created_at": "2023-09-22T01:19:12.341548+07:00",
+    "updated_at": "2023-09-22T01:35:39.197295+07:00",
+    "Transactions": [
+      {
+        "id": "<TransactionId>",
+        "total": 37000000,
+        "created_at": "2023-09-22T01:20:49.828702+07:00",
+        "updated_at": "2023-09-22T01:20:49.866002+07:00"
+      },
+      .....
+    ]
+  }
+}
+```
+
+> [!NOTE]
+> Pastikan untuk menyediakan **ID produk** yang valid dalam URL untuk mengidentifikasi produk yang ingin dilihat informasinya.
+> Data produk meliputi **nama produk**, **harga beli**, **harga jual**, **stok**, **tanggal pembuatan**, **tanggal pembaruan**, dan **riwayat transaksi** terkait produk.
+
+##
+
 ### Update Product
 
 Digunakan untuk memperbarui informasi produk yang sudah ada dalam sistem.
@@ -188,5 +242,213 @@ DELETE http://localhost:5000/api/product/<ProductId>
 > [!NOTE]
 > Pastikan untuk menyediakan ID produk yang valid dalam URL untuk mengidentifikasi produk yang akan dihapus.
 > Periksa status respons untuk memastikan bahwa penghapusan produk telah berhasil dilakukan. Pesan "Success Delete Product With Id 'ID Produk'" akan memberikan konfirmasi tentang produk yang dihapus.
+
+##
+
+### Create Transaction
+
+Digunakan untuk membuat transaksi baru dalam sistem dengan daftar produk yang dibeli.
+
+#### Endpoint
+
+```http
+POST http://localhost:5000/api/transaction
+```
+
+#### Request Body
+
+<ul>
+	<li> <bold>products</bold> (array, required): Daftar produk yang dibeli, setiap produk memiliki ID dan jumlah yang dibeli.</li>
+	<ul>
+		<li> <bold>product_id</bold> (string, required): ID unik produk yang dibeli.</li>
+		<li> <bold>amount</bold> (integer, required): Jumlah produk yang dibeli.</li>
+	</ul>
+</ul>
+
+Contoh Permintaan Body:
+
+```json
+{
+	"products": [
+		{
+			"product_id": "8046372d-af76-461e-a33b-7badc7d1b48e",
+			"amount": 1
+		},
+		{
+			"product_id": "ad588905-9060-4ab6-a414-758c96e72b64",
+			"amount": 1
+		},
+		{
+			"product_id": "de0c7c2c-5108-46ed-a3bf-a22f66cff829",
+			"amount": 1
+		}
+	]
+}
+```
+
+#### Response
+
+- **HTTP Status**: 201 Created
+- **Content-Type**: application/json; charset=utf-8
+
+```json
+{
+	"code": 201,
+	"status": "Created",
+	"data": {
+		"id": "<TransactionId>",
+		"total": 11500000,
+		"created_at": "2023-09-22T08:13:45.931252+07:00",
+		"updated_at": "2023-09-22T08:13:45.992187+07:00",
+		"transaction_details": [
+			{
+				"amount": 1,
+				"products": {
+					"product_name": "Monitor",
+					"selling_price": 2500000
+				}
+			},
+			.....
+		]
+	}
+}
+```
+
+> [!NOTE]
+> Permintaan POST ini digunakan untuk menambahkan pembelian produk ke dalam sistem, dengan memberikan daftar produk yang dibeli dan jumlahnya.
+> Pastikan memeriksa status respons dan data transaksi untuk mendapatkan informasi tentang transaksi yang berhasil dilakukan, termasuk total harga dan rincian produk yang dibeli.
+
+##
+
+### Find Transaction
+
+Digunakan untuk mendapatkan daftar transaksi dalam rentang tanggal tertentu.
+
+#### Endpoint
+
+```http
+GET http://localhost:5000/api/transaction?startDate=2023-09-21&endDate=2023-09-30&page=1&limit=10
+```
+
+#### Parameter
+
+- **startDate** (string, required): Tanggal awal rentang pencarian (format: yyyy-MM-dd).
+- **endDate** (string, required): Tanggal akhir rentang pencarian (format: yyyy-MM-dd).
+- **page** (integer, optional): Nomor halaman yang ingin diakses. Default: 1.
+- **limit** (integer, optional): Jumlah transaksi yang ingin ditampilkan per halaman. Default: 5.
+
+#### Response
+
+- **HTTP Status**: 200 OK
+- **Content-Type**: application/json; charset=utf-8
+
+```json
+{
+  "code": 200,
+  "status": "OK",
+  "current_page": 1,
+  "total_page": 1,
+  "data": [
+    {
+      "id": "<TransactionId>",
+      "total": 37000000,
+      "created_at": "2023-09-22T01:20:49.828702+07:00",
+      "updated_at": "2023-09-22T01:20:49.866002+07:00"
+    },
+    .....
+  ]
+}
+```
+
+> [!NOTE]
+> Anda dapat menggunakan parameter **page** dan **limit** untuk mengontrol jumlah transaksi yang ditampilkan per halaman.
+> Pastikan memeriksa status respons dan data transaksi untuk mendapatkan informasi tentang transaksi dalam rentang tanggal yang sesuai dengan pencarian Anda.
+
+##
+
+### Get Transaction
+
+Digunakan untuk mendapatkan detail lengkap tentang sebuah transaksi berdasarkan ID transaksi.
+
+#### Endpoint
+
+```http
+GET http://localhost:5000/api/transaction/<TransactionId>
+```
+
+Parameter
+
+- **TransactionId** (string, required): ID unik transaksi yang ingin dilihat detailnya.
+
+#### Response
+
+- **HTTP Status**: 200 OK
+- **Content-Type**: application/json; charset=utf-8
+
+```json
+{
+  "code": 200,
+  "status": "OK",
+  "data": {
+    "id": "<TransactionId>",
+    "total": 37000000,
+    "created_at": "2023-09-22T01:20:49.828702+07:00",
+    "updated_at": "2023-09-22T01:20:49.866002+07:00",
+    "transaction_details": [
+      {
+        "amount": 2,
+        "products": {
+          "product_name": "Monitor",
+          "selling_price": 2500000
+        }
+      },
+      .....
+    ]
+  }
+}
+```
+
+> [!NOTE]
+> Pastikan untuk menyediakan ID transaksi yang valid dalam URL untuk mengidentifikasi transaksi yang ingin dilihat detailnya.
+> Data transaksi mencakup total harga, tanggal pembuatan, tanggal pembaruan, dan rincian produk yang dibeli beserta jumlah dan harga jualnya.
+
+##
+
+### Get Report Transaction
+
+Digunakan untuk mendapatkan laporan transaksi dalam rentang tanggal tertentu.
+
+#### Endpoint
+
+```http
+GET http://localhost:5000/api/transaction/report?startDate=2023-09-01&endDate=2023-09-30
+```
+
+#### Parameter
+
+- **startDate** (string, required): Tanggal awal rentang laporan (format: yyyy-MM-dd).
+- **endDate** (string, required): Tanggal akhir rentang laporan (format: yyyy-MM-dd).
+
+#### Response
+
+- **HTTP Status**: 200 OK
+- **Content-Type**: application/json; charset=utf-8
+
+```json
+{
+	"code": 200,
+	"status": "OK",
+	"data": {
+		"total_transaction": 3,
+		"product_sold": 16,
+		"total_sales": 66500000,
+		"total_profit": 18000000
+	}
+}
+```
+
+> [!NOTE]
+> Informasi dalam laporan meliputi **jumlah total transaksi**, **jumlah produk yang terjual**, **total penjualan**, dan **total keuntungan** dalam periode waktu yang dipilih.
+> Pastikan untuk memeriksa status respons dan data laporan untuk mendapatkan informasi yang sesuai dengan rentang tanggal yang Anda minta.
 
 ##

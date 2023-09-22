@@ -8,7 +8,6 @@ import (
 
 type Transaction struct {
 	ID        uuid.UUID `gorm:"primarykey;type:uuid;default:uuid_generate_v4()"`
-	Date      time.Time `gorm:"not null"`
 	Total     float64   `gorm:"not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time

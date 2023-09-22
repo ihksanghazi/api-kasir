@@ -2,14 +2,17 @@
 POST http://localhost:5000/api/product
 
 {
-  "product_name":"Monitor",
-	"purchase_price":2000000,
-	"selling_price":2500000,
-	"stock":60
+  "product_name":"Komputer",
+	"purchase_price":3500000,
+	"selling_price":5000000,
+	"stock":40
 }
 
 ### Find Product
 GET http://localhost:5000/api/product?page=1&limit=3&search=
+
+### Get Product
+GET http://localhost:5000/api/product/ad588905-9060-4ab6-a414-758c96e72b64
 
 ### Update Product
 PUT http://localhost:5000/api/product/6e003967-aece-444a-9caa-6397981293a4
@@ -23,3 +26,32 @@ PUT http://localhost:5000/api/product/6e003967-aece-444a-9caa-6397981293a4
 
 ### Delete Product
 DELETE http://localhost:5000/api/product/41ea634a-30e5-4700-8ece-3030af4a72c7
+
+### Create Transaction
+POST http://localhost:5000/api/transaction
+
+{
+	"products":[
+		{
+			"product_id":"8046372d-af76-461e-a33b-7badc7d1b48e",
+			"amount":1
+		},
+		{
+			"product_id":"ad588905-9060-4ab6-a414-758c96e72b64",
+			"amount":1
+		},
+		{
+			"product_id":"de0c7c2c-5108-46ed-a3bf-a22f66cff829",
+			"amount":1
+		}
+	]
+}
+
+### Find Transaction
+GET http://localhost:5000/api/transaction?startDate=2023-09-21&endDate=2023-09-30&page=1&limit=10
+
+### Get Transaction
+GET http://localhost:5000/api/transaction/81bada9a-4eef-4fa5-b1f9-d5fa825f42a5
+
+### Report Transaction
+GET http://localhost:5000/api/transaction/report?startDate=2023-09-01&endDate=2023-09-30
