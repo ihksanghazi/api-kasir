@@ -257,9 +257,13 @@ POST http://localhost:5000/api/transaction
 
 #### Request Body
 
-- **products** (array, required): Daftar produk yang dibeli, setiap produk memiliki ID dan jumlah yang dibeli.
-  -- **product_id** (string, required): ID unik produk yang dibeli.
-  -- **amount** (integer, required): Jumlah produk yang dibeli.
+<ul>
+	<li> <bold>products</bold> (array, required): Daftar produk yang dibeli, setiap produk memiliki ID dan jumlah yang dibeli.</li>
+	<ul>
+		<li> <bold>product_id</bold> (string, required): ID unik produk yang dibeli.</li>
+		<li> <bold>amount</bold> (integer, required): Jumlah produk yang dibeli.</li>
+	</ul>
+</ul>
 
 Contoh Permintaan Body:
 
@@ -304,20 +308,7 @@ Contoh Permintaan Body:
 					"selling_price": 2500000
 				}
 			},
-			{
-				"amount": 1,
-				"products": {
-					"product_name": "Laptop",
-					"selling_price": 4000000
-				}
-			},
-			{
-				"amount": 1,
-				"products": {
-					"product_name": "Komputer",
-					"selling_price": 5000000
-				}
-			}
+			.....
 		]
 	}
 }
