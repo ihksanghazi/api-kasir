@@ -43,7 +43,7 @@ Contoh Request Body:
 
 ```json
 {
-	"code": 200,
+	"code": 201,
 	"status": "OK",
 	"data": {
 		"product_name": "Monitor",
